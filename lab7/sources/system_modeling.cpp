@@ -32,12 +32,11 @@ void system_modeling(int* served, int* declined, int lambda, int nu, int t) {
     mt19937 generator(time(0));
     uniform_real_distribution<> random(0, 1);
 
-    vector<time_frame> time_frames(2048);
-    priority_queue<time_frame, vector<time_frame>, time_frame_comparator> ordered_time_frames;
+    priority_queue<time_frame, vector<time_frame>> ordered_time_frames;
 
     system_state system_status = IDLING;
 
-    ordered_time_frames.push(time_frame{ INNER, -(static_cast <double>(1) / lambda * log(1 - random(generator))) });
+    ordered_time_frames.emplace(INNER, -(static_cast <double>(1) / lambda * log(1 - random(generator))));
 
     cout << endl << " Моделирование" << endl;
     cout << "------------------------------------------------------------------------------" << endl;
@@ -55,18 +54,18 @@ void system_modeling(int* served, int* declined, int lambda, int nu, int t) {
 
             double time_till_request = -(static_cast <double>(1) / lambda * log(1 - random(generator)));
 
-            ordered_time_frames.push(time_frame{ INNER, current_time_point.time_point + time_till_request });
+            ordered_time_frames.emplace(INNER, current_time_point.time_point + time_till_request);
 
             if (!is_max(system_status)) {
+                (*served)++;
 
                 double serving_time = -(static_cast <double>(1) / nu * log(1 - random(generator)));
-                ordered_time_frames.push(time_frame{ OUTER, current_time_point.time_point + serving_time });
+                ordered_time_frames.emplace(OUTER, current_time_point.time_point + serving_time);
 
                 inc(system_status);
 #ifdef DEBUG
                 cout << " ACCEPTED,\tstatus: " << system_status << "\ttime: " << current_time_point.time_point << endl;
 #endif // DEBUG
-                (*served)++;
 
             } else {
 #ifdef DEBUG

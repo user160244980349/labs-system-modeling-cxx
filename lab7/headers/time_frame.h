@@ -1,16 +1,20 @@
-﻿#ifndef MODSYS_TIMEFRAME_H
+#ifndef MODSYS_TIMEFRAME_H
 #define MODSYS_TIMEFRAME_H
 
 #include "time_frame_type.h"
 
-typedef struct time_frame {
+class time_frame {
+public:
 	time_frame_type type;
 	double time_point;
-} time_frame;
 
-struct time_frame_comparator {
-	bool operator()(const time_frame& lhs, const time_frame& rhs) {
-		return lhs.time_point > rhs.time_point;
+	time_frame(time_frame_type type, double time_point) {
+		this->type = type;
+		this->time_point = time_point;
+	}
+
+	bool operator< (const time_frame& other) const {
+		return time_point > other.time_point;
 	}
 };
 

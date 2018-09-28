@@ -1,6 +1,8 @@
 #include <iostream>
 #include <math.h>
 
+#include "headers/variant_3.h"
+// #include "headers/variant_4.h"
 #include "headers/system_modeling.h"
 #include "headers/normal_distribution.h"
 
@@ -9,16 +11,16 @@ using std::endl;
 
 int main() {
 
-	int l 			= 2;
-	int n 			= 3;
+	extern int l;
+	extern int n;
+	extern double p_theoretical;
 	int t 			= 100;
 	int served 		= 0;
 	int declined 	= 0;
 
 	system_modeling(&served, &declined, l, n, t);
 
-	double p = static_cast<double>(declined) / (served + declined);
-	double p_theoretical = static_cast<double>(l) / (l + n);
+	double p = p_a(served, declined);
 	double delta = abs(p - p_theoretical);
 	double sigma = sqrt(p * (1 - p) / (served + declined));
 	double alpha = delta / sigma;
