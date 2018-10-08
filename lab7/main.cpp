@@ -7,7 +7,6 @@
 #include "headers/system_modeling.h"
 #include "headers/normal_distribution.h"
 
-
 using std::vector;
 using std::string;
 

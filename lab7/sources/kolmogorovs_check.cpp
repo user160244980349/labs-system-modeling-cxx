@@ -46,22 +46,6 @@ toFunction(array) {
     return tempArray;
 }
 
-countExpectedValue(array) {
-    var sum = 0;
-    for (var index = 0; index < array.length; index++) {
-        sum += array[index] * this.data.average[index];
-    }
-    return sum;
-}
-
-countDispersion(array, expected_value) {
-    var sum = 0;
-    for (var index = 0; index < array.length; index++) {
-        sum += array[index] * Math.pow(this.data.average[index] - expected_value, 2);
-    }
-    return sum;
-}
-
 countConformityKolmogorov(array, theory, n) {
     var temp = 0;
     var max = 0;
@@ -81,45 +65,19 @@ countConformityKolmogorov(array, theory, n) {
 }
 
 double kolmogorovs_check(vector<double> emp, vector<double> the, int n, int groups, double min, double max) {
-    this.data = JSON.parse('{"groups": [],"histogram": [],"function": [],"expected_value": 0,"dispersion": 0,"groups_2": [],"histogram_2": [],"function_2": [],"expected_value_2": 0,"dispersion_2": 0,"kolmogorov_conformity": 0,"kolmogorov_smirnov_conformity": 0,"pearson_conformity": 0,"average": [],"data_t": []}');
-    this.result_1 = array_1;
-    this.result_2 = array_2;
+   
     this.result_1.sort();
     this.result_2.sort();
 
     this.data.groups            = this.chunkArray(this.result_1, groups_count, min_result, max_result);
     this.data.histogram         = this.approximateArray(this.data.groups, this.result_1);
-    this.data.expected_value    = this.countExpectedValue(this.data.histogram);
-    this.data.dispersion        = this.countDispersion(this.data.histogram, this.data.expected_value);
-
-    this.data.data_t    = [];
-    this.data.average   = [];
 
     this.data.groups_2          = this.chunkArray(this.result_2, groups_count, min_result, max_result);
     this.data.histogram_2       = this.approximateArray(this.data.groups_2, this.result_2);
-    this.data.expected_value_2  = this.countExpectedValue(this.data.histogram_2);
-    this.data.dispersion_2      = this.countDispersion(this.data.histogram_2, this.data.expected_value_2);
 
-    if (this.mode == 1) {
-        this.data.pearson_conformity = this.countConformityPearson(this.data.histogram, this.data.histogram_2, n);
-        console.log('Критерий согласия Пирсона: '.concat(this.data.pearson_conformity));
-
-    } else if (this.mode == 2) {
-        this.data.function      = this.toFunction(this.data.histogram);
-        this.data.function_2    = this.toFunction(this.data.histogram_2);
-        this.data.kolmogorov_conformity = this.countConformityKolmogorov(this.data.function, this.data.function_2, n);
-
-        console.log('Критерий согласия Колмогорова:'.concat(this.data.kolmogorov_conformity));
-    } else if (this.mode == 3) {
-        this.data.function      = this.toFunction(this.data.histogram);
-        this.data.function_2    = this.toFunction(this.data.histogram_2);
-        this.data.kolmogorov_smirnov_conformity = this.countConformityKolmogorovSmirnov(this.data.function, this.data.function_2, n);
-
-        console.log('Критерий согласия Колмогорова-Смирнова:'.concat(this.data.kolmogorov_smirnov_conformity));
-    }
-
-    console.log('(1) Мат. ожидание: '.concat(this.data.expected_value)  .concat(', дисперсия: ').concat(this.data.dispersion));
-    console.log('(2) Мат. ожидание: '.concat(this.data.expected_value_2).concat(', дисперсия: ').concat(this.data.dispersion_2));
+    this.data.function      = this.toFunction(this.data.histogram);
+    this.data.function_2    = this.toFunction(this.data.histogram_2);
+    this.data.kolmogorov_conformity = this.countConformityKolmogorov(this.data.function, this.data.function_2, n);
 
     return 0;
 }
