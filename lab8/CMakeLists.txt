@@ -17,4 +17,10 @@ add_executable(exec_lab_8
     sources/normal_distribution.cpp
     headers/system_modeling.h
     sources/system_modeling.cpp
+    headers/pearsons_check.h
+    sources/pearsons_check.cpp
+    headers/kolmogorovs_check.h
+    sources/kolmogorovs_check.cpp
+    headers/variant_3.h
+    headers/variant_4.h
 )
