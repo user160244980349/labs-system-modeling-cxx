@@ -30,7 +30,7 @@ int main() {
 	vector<double> in;
 	vector<double> out;
 	
-	int t 			= 100;
+	int t 			= 10;
 	int served 		= 0;
 	int declined 	= 0;
 
