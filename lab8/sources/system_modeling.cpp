@@ -29,7 +29,7 @@ using std::uniform_real_distribution;
 using std::cout;
 using std::endl;
 
-#define DEBUG
+// #define DEBUG
 
 void system_modeling(int& served, int& declined, int lambda, int nu, int t, vector<double>& comes, vector<double>& leaves) {
 

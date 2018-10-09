@@ -2,19 +2,24 @@
 #include <math.h>
 #include <string>
 #include <algorithm>
+#include <random>
+#include <ctime>
 
-#include "headers/variant_4.h"
+#include "headers/variant_3.h"
+// #include "headers/variant_4.h"
 #include "headers/system_modeling.h"
-#include "headers/normal_distribution.h"
+
+using std::vector;
+using std::string;
+
+using std::min_element;
+using std::max_element;
 
 using std::cout;
 using std::endl;
 
-using std::string;
-using std::vector;
-
-using std::min_element;
-using std::max_element;
+using std::mt19937;
+using std::uniform_real_distribution;
 
 int main() {
 
@@ -24,20 +29,16 @@ int main() {
 
 	vector<double> in;
 	vector<double> out;
-
+	
 	int t 			= 100;
 	int served 		= 0;
 	int declined 	= 0;
 
-	// system_modeling(served, declined, l, n, t);
 	system_modeling(served, declined, l, n, t, in, out);
 
 	double p = p_emperical(served, declined);
 	double delta = abs(p - p_theoretical);
 	double sigma = sqrt(p * (1 - p) / (served + declined));
-	double alpha = delta / sigma;
-	// double p_r = 2 * normal_distribution(alpha);
-	// double e = alpha * sigma;
 	double e = 3 * sigma;
 	double a_e = abs(p - p_theoretical);
 
@@ -52,12 +53,27 @@ int main() {
 	cout << " Дополнительная серия опытов не требуется" << endl << endl;
 
 	vector<double> the;
+	vector<double> emp;
 	extern string check_message;
-	std::vector<double>::iterator min = min_element(in.begin(), in.end());
-	std::vector<double>::iterator max = max_element(in.begin(), in.end());
-	cout << check_message << endl << "Интенсивность: " << check(in, the, in.size(), 20, *min, *max);
 
-	min = min_element(out.begin(), out.end());
-	max = max_element(out.begin(), out.end());
-	cout << endl << "Производительность: " << check(out, the, out.size(), 20, *min, *max) << endl;
+    mt19937 generator(time(0));
+    uniform_real_distribution<> random(0, 1);
+
+	int n_selection = in.size() > out.size() ? out.size() : in.size();
+	// int n_selection = 50;
+
+	for (int i = 0; i < n_selection; i++) {
+		the.push_back(-(static_cast <double>(1) / l * log(1 - random(generator))));
+		emp.push_back(in[i]);
+	}
+	cout << " " << check_message << endl << " Интенсивность: " << check(emp, the, 20);
+
+	the.clear();
+	emp.clear();
+	for (int i = 0; i < n_selection; i++) {
+		the.push_back(-(static_cast <double>(1) / n * log(1 - random(generator))));
+		emp.push_back(out[i]);
+	}
+	cout << endl << " Производительность: " << check(emp, the, 20) << endl << endl;
+
 }

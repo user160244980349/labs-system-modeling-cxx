@@ -1,42 +1,13 @@
 #include "../headers/pearsons_check.h"
+#include "../headers/helpers.h"
 #include <vector>
 #include <math.h>
 #include <algorithm>
-#include <iostream>
 
 using std::vector;
 using std::sort;
-using std::cout;
-using std::endl;
-
-vector<vector<double>> chunk_array(vector<double> array, int groups, double min, double max) {
-    double step = (max - min) / groups;
-    vector<vector<double>> temp_array;
-
-    int j = 0;
-    for (int i = 0; i < groups; i++) {
-        temp_array.push_back(vector<double>());
-        for (; array[j] <= min + i * step && j < array.size(); j++) {
-            temp_array.back().push_back(array[j]);
-        }
-    }
-
-    return temp_array;
-}
-
-vector<double> approximate_array(vector<vector<double>> array) {
-    vector<double> temp_array;
-
-    for (auto &group : array) {
-        if (!group.empty()) {
-            temp_array.push_back((group.front() + group.back()) / 2);
-        } else {
-            temp_array.push_back(0);
-        }
-    }
-
-    return temp_array;
-}
+using std::min_element;
+using std::max_element;
 
 double count_conformity_pearson(vector<double> array, vector<double> theory) {
     double sum = 0;
@@ -47,7 +18,6 @@ double count_conformity_pearson(vector<double> array, vector<double> theory) {
         }
         sum += pow(array[index] - theory[index], 2) / theory[index];
     }
-
     return index * sum;
 }
 
@@ -64,7 +34,7 @@ double pearsons_check(vector<double> emp, vector<double> the, int groups) {
     vector<double> histogram_emp = approximate_array(chunk_array(emp, groups, min_emp, max_emp));
     vector<double> histogram_the = approximate_array(chunk_array(the, groups, min_the, max_the));
 
-    return count_conformity_pearson(histogram_the, histogram_emp);
+    return count_conformity_pearson(histogram_emp, histogram_the);
 }
 
     

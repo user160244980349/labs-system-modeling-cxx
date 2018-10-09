@@ -1,4 +1,3 @@
-
 #include <string>
 #include "pearsons_check.h"
 
@@ -14,8 +13,8 @@ double p_emperical(int served, int declined) {
     return static_cast<double>(declined) / (served + declined);
 }
 
-double check(std::vector<double> emp, std::vector<double> the, int n, int groups, double min, double max) {
-    return pearsons_check(emp, the, n, groups, min, max);
+double check(std::vector<double> emp, std::vector<double> the, int groups) {
+    return pearsons_check(emp, the, groups);
 }
 
 std::string check_message = "Критерий Пирсона";

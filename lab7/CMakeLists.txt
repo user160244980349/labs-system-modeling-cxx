@@ -1,9 +1,9 @@
 
 project(lab7)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${PROJECT_NAME})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${PROJECT_NAME})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 add_executable(exec_lab_7
     main.cpp
@@ -21,6 +21,8 @@ add_executable(exec_lab_7
     sources/pearsons_check.cpp
     headers/kolmogorovs_check.h
     sources/kolmogorovs_check.cpp
+    headers/helpers.h
+    sources/helpers.cpp
     headers/variant_3.h
     headers/variant_4.h
 )

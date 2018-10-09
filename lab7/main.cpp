@@ -3,10 +3,12 @@
 #include <string>
 #include <algorithm>
 #include <random>
+#include <ctime>
 
-#include "headers/variant_4.h"
+
+#include "headers/variant_3.h"
+// #include "headers/variant_4.h"
 #include "headers/system_modeling.h"
-#include "headers/normal_distribution.h"
 
 using std::vector;
 using std::string;
@@ -29,19 +31,15 @@ int main() {
 	vector<double> in;
 	vector<double> out;
 	
-	int t 			= 1;
+	int t 			= 100;
 	int served 		= 0;
 	int declined 	= 0;
 
-	// system_modeling(served, declined, l, n, t);
 	system_modeling(served, declined, l, n, t, in, out);
 
 	double p = p_emperical(served, declined);
 	double delta = abs(p - p_theoretical);
 	double sigma = sqrt(p * (1 - p) / (served + declined));
-	double alpha = delta / sigma;
-	// double p_r = normal_distribution(alpha);
-	// double e = alpha * sigma;
 	double e = 3 * sigma;
 	double a_e = abs(p - p_theoretical);
 
@@ -62,19 +60,21 @@ int main() {
     mt19937 generator(time(0));
     uniform_real_distribution<> random(0, 1);
 
-	for (int i = 0; i < 3000000; i++) {
+	int n_selection = in.size() > out.size() ? out.size() : in.size();
+	// int n_selection = 50;
+
+	for (int i = 0; i < n_selection; i++) {
 		the.push_back(-(static_cast <double>(1) / l * log(1 - random(generator))));
 		emp.push_back(in[i]);
 	}
-	// int n = the.size() > emp.size() ? the.size() : emp.size();
-	cout << check_message << endl << "Интенсивность: " << check(emp, the, 20);
+	cout << " " << check_message << endl << " Интенсивность: " << check(emp, the, 20);
 
 	the.clear();
 	emp.clear();
-	for (int i = 0; i < 3000000; i++) {
+	for (int i = 0; i < n_selection; i++) {
 		the.push_back(-(static_cast <double>(1) / n * log(1 - random(generator))));
 		emp.push_back(out[i]);
 	}
-	cout << endl << "Производительность: " << check(emp, the, 20) << endl;
+	cout << endl << " Производительность: " << check(emp, the, 20) << endl << endl;
 
 }

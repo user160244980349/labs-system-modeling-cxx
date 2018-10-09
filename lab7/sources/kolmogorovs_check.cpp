@@ -1,83 +1,46 @@
 #include "../headers/kolmogorovs_check.h"
+#include "../headers/helpers.h"
 #include <vector>
+#include <math.h>
+#include <algorithm>
 
 using std::vector;
+using std::sort;
+using std::min_element;
+using std::max_element;
 
-// chunkArray() {
-//     var counter     = begin_value;
-//     var tempArray   = [];
-//     var range       = (target_value - begin_value) / groups_count;
-//     while (counter < target_value) {
-//         tempArray.push(array.filter((value) => (value >= counter) && (value < counter + range)));
-//         counter += range;
-//     }
-//     return tempArray;
-// }
+double count_conformity_kolmogorov(vector<double> array, vector<double> theory) {
 
-// approximateArray() {
-//     var tempArray = [];
-//     for (var index = 0; index < array.length; index++) {
+    double temp = 0;
+    double max = 0;
 
-//         // histogram
-//         var delta = array[index].length / result_array.length;
-//         tempArray.push(delta);
-
-//         // average
-//         var tempLength = array[index].length;
-//         if (array[index][tempLength - 1] != undefined && array[index][0] != undefined) {
-//             this.data.average.push((array[index][tempLength - 1] + array[index][0]) / 2);
-//         } else {
-//             this.data.average.push(0);
-//         }
-
-//         this.data.data_t.push(index);
-//     }
-//     return tempArray;
-// }
-
-// toFunction(array) {
-//     var tempArray = [];
-//     var sum = 0.0;
-//     for (var index = 0; index < array.length; index++) {
-//         var delta = array[index] + sum;
-//         tempArray.push(delta);
-//         sum = delta;
-//     }
-//     return tempArray;
-// }
-
-// countConformityKolmogorov(array, theory, n) {
-//     var temp = 0;
-//     var max = 0;
-//     for (var index = 0; index < array.length; index++) {
-//         if (array[index] >= theory[index]) { // F* is higher
-//             temp = Math.abs(array[index] - theory[index]);
-//         } else {
-//             if (index > 0) {
-//                 temp = Math.abs(array[index - 1] - theory[index]);
-//             }
-//         }
-//         if (temp > max) {
-//             max = temp;
-//         }
-//     }
-//     return max * Math.sqrt(n);
-// }
+    for (int index = 0; index < array.size(); index++) {
+        if (array[index] >= theory[index]) {
+            temp = abs(array[index] - theory[index]);
+        } else {
+            if (index > 0) {
+                temp = abs(array[index - 1] - theory[index]);
+            }
+        }
+        if (temp > max) {
+            max = temp;
+        }
+    }
+    return max * sqrt(array.size() > theory.size() ? theory.size() : array.size());
+}
 
 double kolmogorovs_check(vector<double> emp, vector<double> the, int groups) {
    
-    // this.result_1.sort();
-    // this.result_2.sort();
+	double min_emp = *(min_element(emp.begin(), emp.end()));
+	double max_emp = *(max_element(emp.begin(), emp.end()));
+	double min_the = *(min_element(the.begin(), the.end()));
+	double max_the = *(max_element(the.begin(), the.end()));
 
-    // this.data.groups            = this.chunkArray(this.result_1, groups_count, min_result, max_result);
-    // this.data.histogram         = this.approximateArray(this.data.groups, this.result_1);
+    sort(emp.begin(), emp.end());
+    sort(the.begin(), the.end());
 
-    // this.data.groups_2          = this.chunkArray(this.result_2, groups_count, min_result, max_result);
-    // this.data.histogram_2       = this.approximateArray(this.data.groups_2, this.result_2);
+    vector<double> histogram_emp = approximate_array(chunk_array(emp, groups, min_emp, max_emp));
+    vector<double> histogram_the = approximate_array(chunk_array(the, groups, min_emp, max_emp));
 
-    // this.data.function      = this.toFunction(this.data.histogram);
-    // this.data.function_2    = this.toFunction(this.data.histogram_2);
-    // this.data.kolmogorov_conformity = this.countConformityKolmogorov(this.data.function, this.data.function_2, n);
-
-    return 0;
+    return count_conformity_kolmogorov(to_function(histogram_emp), to_function(histogram_the));
 }
