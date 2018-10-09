@@ -2,6 +2,7 @@
 #include <math.h>
 #include <string>
 #include <algorithm>
+#include <random>
 
 #include "headers/variant_4.h"
 #include "headers/system_modeling.h"
@@ -16,6 +17,9 @@ using std::max_element;
 using std::cout;
 using std::endl;
 
+using std::mt19937;
+using std::uniform_real_distribution;
+
 int main() {
 
 	extern int l;
@@ -25,7 +29,7 @@ int main() {
 	vector<double> in;
 	vector<double> out;
 	
-	int t 			= 100;
+	int t 			= 1;
 	int served 		= 0;
 	int declined 	= 0;
 
@@ -52,12 +56,25 @@ int main() {
 	cout << " Дополнительная серия опытов не требуется" << endl << endl;
 
 	vector<double> the;
+	vector<double> emp;
 	extern string check_message;
-	std::vector<double>::iterator min = min_element(in.begin(), in.end());
-	std::vector<double>::iterator max = max_element(in.begin(), in.end());
-	cout << check_message << endl << "Интенсивность: " << check(in, the, in.size(), 20, *min, *max);
 
-	min = min_element(out.begin(), out.end());
-	max = max_element(out.begin(), out.end());
-	cout << endl << "Производительность: " << check(out, the, out.size(), 20, *min, *max) << endl;
+    mt19937 generator(time(0));
+    uniform_real_distribution<> random(0, 1);
+
+	for (int i = 0; i < 3000000; i++) {
+		the.push_back(-(static_cast <double>(1) / l * log(1 - random(generator))));
+		emp.push_back(in[i]);
+	}
+	// int n = the.size() > emp.size() ? the.size() : emp.size();
+	cout << check_message << endl << "Интенсивность: " << check(emp, the, 20);
+
+	the.clear();
+	emp.clear();
+	for (int i = 0; i < 3000000; i++) {
+		the.push_back(-(static_cast <double>(1) / n * log(1 - random(generator))));
+		emp.push_back(out[i]);
+	}
+	cout << endl << "Производительность: " << check(emp, the, 20) << endl;
+
 }

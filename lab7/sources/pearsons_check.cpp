@@ -1,62 +1,70 @@
 #include "../headers/pearsons_check.h"
 #include <vector>
+#include <math.h>
 #include <algorithm>
+#include <iostream>
 
 using std::vector;
 using std::sort;
+using std::cout;
+using std::endl;
 
-vector<vector<double>> chunkArray(vector<double> array) {
-    int counter = begin_value;
-    vector<vector<double>> tempArray;
-    double range = (target_value - begin_value) / groups_count;
-    while (counter < target_value) {
-        tempArray.push_back();
-        counter += range;
-    }
-    return tempArray;
-}
+vector<vector<double>> chunk_array(vector<double> array, int groups, double min, double max) {
+    double step = (max - min) / groups;
+    vector<vector<double>> temp_array;
 
-vector<double> approximateArray(vector<vector<double>> array) {
-    vector<double> tempArray;
-    for (int index = 0; index < array.size(); index++) {
-
-        // histogram
-        double delta = array[index].size() / result_array.size();
-        tempArray.push_back(delta);
-
-        // average
-        int tempLength = array[index].length;
-        if (array[index][tempLength - 1] != undefined && array[index][0] != undefined) {
-            average.push((array[index][tempLength - 1] + array[index][0]) / 2);
-        } else {
-            average.push(0);
+    int j = 0;
+    for (int i = 0; i < groups; i++) {
+        temp_array.push_back(vector<double>());
+        for (; array[j] <= min + i * step && j < array.size(); j++) {
+            temp_array.back().push_back(array[j]);
         }
-
-        data_t.push(index);
     }
-    return tempArray;
+
+    return temp_array;
 }
 
-double countConformityPearson(vector<double> array, vector<double> theory, int n) {
+vector<double> approximate_array(vector<vector<double>> array) {
+    vector<double> temp_array;
+
+    for (auto &group : array) {
+        if (!group.empty()) {
+            temp_array.push_back((group.front() + group.back()) / 2);
+        } else {
+            temp_array.push_back(0);
+        }
+    }
+
+    return temp_array;
+}
+
+double count_conformity_pearson(vector<double> array, vector<double> theory) {
     double sum = 0;
-    for (int index = 0; index < array.size(); index++) {
+    int index = 0;
+    for (;index < array.size() && index < theory.size(); index++) {
+        if (theory[index] == 0) { 
+            continue; 
+        }
         sum += pow(array[index] - theory[index], 2) / theory[index];
     }
-    return n * sum;
+
+    return index * sum;
 }
 
-double pearsons_check(vector<double> emp, vector<double> the, int n, int groups, double min, double max) {
-    
+double pearsons_check(vector<double> emp, vector<double> the, int groups) {
+
+	double min_emp = *(min_element(emp.begin(), emp.end()));
+	double max_emp = *(max_element(emp.begin(), emp.end()));
+	double min_the = *(min_element(the.begin(), the.end()));
+	double max_the = *(max_element(the.begin(), the.end()));
+
     sort(emp.begin(), emp.end());
     sort(the.begin(), the.end());
 
-    vector<vector<double>> groups = chunkArray(the, groups, min, max);
-    vector<double> histogram = approximateArray(groups, the);
+    vector<double> histogram_emp = approximate_array(chunk_array(emp, groups, min_emp, max_emp));
+    vector<double> histogram_the = approximate_array(chunk_array(the, groups, min_the, max_the));
 
-    vector<vector<double>> groups_2 = chunkArray(emp, groups, min, max);
-    vector<double> histogram_2 = approximateArray(groups_2, emp);
-
-    return countConformityPearson(histogram, histogram_2, n);
+    return count_conformity_pearson(histogram_the, histogram_emp);
 }
 
     

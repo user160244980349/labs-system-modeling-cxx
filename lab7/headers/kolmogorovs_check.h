@@ -3,6 +3,6 @@
 
 #include <vector>
 
-double kolmogorovs_check(std::vector<double> emp, std::vector<double> the, int n, int groups, double min, double max);
+double kolmogorovs_check(std::vector<double> emp, std::vector<double> the, int groups);
 
 #endif // MODSYS_KOLMOGOROVSCHECK_H
