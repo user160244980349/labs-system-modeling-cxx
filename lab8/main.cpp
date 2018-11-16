@@ -29,28 +29,40 @@ int main() {
 
 	vector<double> in;
 	vector<double> out;
-	
-	int t 			= 10;
+
+	int t 			= 100;
 	int served 		= 0;
 	int declined 	= 0;
+	double e_ 		= 0.01;
 
-	system_modeling(served, declined, l, n, t, in, out);
+	system_modeling_t(served, declined, l, n, t, in, out);
 
-	double p = p_emperical(served, declined);
-	double delta = abs(p - p_theoretical);
-	double sigma = sqrt(p * (1 - p) / (served + declined));
-	double e = 3 * sigma;
-	double a_e = abs(p - p_theoretical);
+	while (true) {
 
-	cout << endl << " После 100 секунд моделирования" << endl;
+		double p = p_emperical(served, declined);
+		double delta = abs(p - p_theoretical);
+		double sigma = sqrt(p * (1 - p) / (served + declined));
+		double e = 3 * sigma;
+		double a_e = abs(p - p_theoretical);
+
+		cout << "------------------------------------------------------------------------------" << endl;
+		cout << " Обслужено:\t\t\t\t\t\t" << served << endl;
+		cout << " Отклонено:\t\t\t\t\t\t" << declined << endl;
+		cout << " Экспериментальная оценка вероятности события А:\t" << p << endl;
+		cout << " Теоретическая оценка вероятности события А:\t\t" << p_theoretical << endl;
+		cout << " Ошибка экспериментальной оценки:\t\t\t" << e << endl;
+		cout << " Абслоютная погрешность:\t\t\t\t" << a_e << endl;
+
+		if (e > e_) {
+			int additional_n = 9 * p * (1 - p) / e_ / e_;
+			cout << " Дополнительная серия опытов:\t\t\t\t" << additional_n << endl;
+			system_modeling_n(served, declined, l, n, additional_n, in, out);
+		} else {
+			break;
+		}
+
+	}
 	cout << "------------------------------------------------------------------------------" << endl;
-	cout << " Обслужено:\t\t\t\t\t\t" << served << endl;
-	cout << " Отклонено:\t\t\t\t\t\t" << declined << endl;
-	cout << " Экспериментальная оценка вероятности события А:\t" << p << endl;
-	cout << " Теоретическая оценка вероятности события А:\t\t" << p_theoretical << endl;
-	cout << " Точность экспериментальной оценки:\t\t\t" << 1 - e << endl;
-	cout << " Абслоютная погрешность:\t\t\t\t" << a_e << " < 0.01" << endl;
-	cout << " Дополнительная серия опытов не требуется" << endl << endl;
 
 	vector<double> the;
 	vector<double> emp;
@@ -60,7 +72,6 @@ int main() {
     uniform_real_distribution<> random(0, 1);
 
 	int n_selection = in.size() > out.size() ? out.size() : in.size();
-	// int n_selection = 50;
 
 	for (int i = 0; i < n_selection; i++) {
 		the.push_back(-(static_cast <double>(1) / l * log(1 - random(generator))));
