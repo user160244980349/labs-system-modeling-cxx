@@ -6,8 +6,8 @@
 #include <ctime>
 
 
-#include "headers/variant_3.h"
-// #include "headers/variant_4.h"
+// #include "headers/variant_3.h"
+#include "headers/variant_4.h"
 #include "headers/system_modeling.h"
 
 using std::vector;
@@ -72,7 +72,7 @@ int main() {
     mt19937 generator(time(0));
     uniform_real_distribution<> random(0, 1);
 
-	int n_selection = in.size() > out.size() ? out.size() : in.size();
+	int n_selection = 25;
 
 	for (int i = 0; i < n_selection; i++) {
 		the.push_back(-(static_cast <double>(1) / l * log(1 - random(generator))));

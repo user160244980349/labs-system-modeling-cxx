@@ -13,8 +13,8 @@ double count_conformity_pearson(vector<double> array, vector<double> theory) {
     double sum = 0;
     int index = 0;
     for (;index < array.size() && index < theory.size(); index++) {
-        if (theory[index] == 0) { 
-            continue; 
+        if (theory[index] == 0) {
+            continue;
         }
         sum += pow(array[index] - theory[index], 2) / theory[index];
     }
@@ -34,7 +34,5 @@ double pearsons_check(vector<double> emp, vector<double> the, int groups) {
     vector<double> histogram_emp = approximate_array(chunk_array(emp, groups, min_emp, max_emp));
     vector<double> histogram_the = approximate_array(chunk_array(the, groups, min_the, max_the));
 
-    return count_conformity_pearson(histogram_emp, histogram_the);
+    return count_conformity_pearson(histogram_the, histogram_emp);
 }
-
-    
