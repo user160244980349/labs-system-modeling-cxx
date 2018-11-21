@@ -6,8 +6,8 @@
 #include <ctime>
 
 
-// #include "headers/variant_3.h"
-#include "headers/variant_4.h"
+#include "headers/variant_3.h"
+// #include "headers/variant_4.h"
 #include "headers/system_modeling.h"
 
 using std::vector;

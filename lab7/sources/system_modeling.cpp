@@ -50,7 +50,7 @@ void system_modeling_t(int& served, int& declined, int lambda, int nu, int t, ve
 #endif // DEBUG
     double current_time = 0;
     // Начало отсчета времени опыта
-    while (current_time < t) {
+    while (current_time < t + 100) {
 
         // Из очереди с приоритетом достается кадр времени
         auto current_time_point = ordered_time_frames.top();
@@ -68,7 +68,9 @@ void system_modeling_t(int& served, int& declined, int lambda, int nu, int t, ve
 
             // Если система не загружена полностью заявка обработается
             if (!is_max(system_status)) {
-                served++;
+
+                if (current_time > 100)
+                    served++;
 
                 // Расчет времени обслуживания всех заявок (очередь)
                 double serving_time = -(static_cast <double>(1) / nu * log(1 - random(generator)));
@@ -86,7 +88,8 @@ void system_modeling_t(int& served, int& declined, int lambda, int nu, int t, ve
 #ifdef DEBUG
                 cout << " DECLINED,\tstatus: " << system_status << "\ttime: " << current_time_point.time_point << endl;
 #endif // DEBUG
-                declined++;
+                if (current_time > 100)
+                    declined++;
 
             }
         }
@@ -145,7 +148,9 @@ void system_modeling_n(int& served, int& declined, int lambda, int nu, int n, ve
 
             // Если система не загружена полностью заявка обработается
             if (!is_max(system_status)) {
-                served++;
+
+                if (current_time > 100)
+                    served++;
 
                 // Расчет времени обслуживания всех заявок (очередь)
                 double serving_time = -(static_cast <double>(1) / nu * log(1 - random(generator)));
@@ -163,7 +168,8 @@ void system_modeling_n(int& served, int& declined, int lambda, int nu, int n, ve
 #ifdef DEBUG
                 cout << " DECLINED,\tstatus: " << system_status << "\ttime: " << current_time_point.time_point << endl;
 #endif // DEBUG
-                declined++;
+                if (current_time > 100)
+                    declined++;
 
             }
         }
